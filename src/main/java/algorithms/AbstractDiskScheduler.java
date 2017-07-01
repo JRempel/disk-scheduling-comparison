@@ -1,6 +1,5 @@
 package algorithms;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import exceptions.InvalidRequestException;
@@ -23,6 +22,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     }
 
     public void reset() {
+        totalHeadMovements = 0;
         currentHeadCylinder = 0;
         requestQueue = null;
         orderProcessed = new ArrayList<>();
@@ -35,13 +35,13 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
                 queue.stream().distinct().count() == queue.size();
     }
 
-    protected void validateRequest(Integer request) {
+    void validateRequest(Integer request) {
         if (request == null || request < MIN_DISK_CYLINDER || request > MAX_DISK_CYLINDER) {
             throw new InvalidRequestException(request, getClass());
         }
     }
 
-    protected Integer getNextRequestUp() {
+    Integer getNextRequestUp() {
         return requestQueue
                 .stream()
                 .filter(request -> request - currentHeadCylinder > 0)
@@ -49,7 +49,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
                 .orElse(null);
     }
 
-    protected Integer getNextRequestDown() {
+    Integer getNextRequestDown() {
         return requestQueue
                 .stream()
                 .filter(request -> currentHeadCylinder - request > 0)
