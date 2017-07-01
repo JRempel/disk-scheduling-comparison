@@ -1,12 +1,11 @@
 package algorithms;
 
 /**
- * The C-SCAN (Circular SCAN) algorithm selects requests that are nearest to the current head
- * position and in the direction the head is traveling. C-SCAN effectively treats the disk as
- * a circular list by jumping from the max cylinder to the min without changing directions
- * (as with SCAN).
+ * The C-LOOK (Circular LOOK) algorithm behaves the same as C-SCAN, with the exception that it
+ * doesn't travel to the max cylinder if there are no requests between that and it's current
+ * position.
  */
-public class CSCAN extends AbstractDiskScheduler {
+public class CLOOK extends AbstractDiskScheduler {
     public void run() {
         Integer nextRequest;
         while (!requestQueue.isEmpty()) {

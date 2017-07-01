@@ -42,4 +42,20 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
             throw new InvalidRequestException(request, clazz);
         }
     }
+
+    protected Integer getNextRequestUp() {
+        return requestQueue
+                .stream()
+                .filter(request -> request - currentHeadCylinder > 0)
+                .reduce((request1, request2) -> Math.min(request1 - currentHeadCylinder, request2 - currentHeadCylinder))
+                .orElse(null);
+    }
+
+    protected Integer getNextRequestDown() {
+        return requestQueue
+                .stream()
+                .filter(request -> currentHeadCylinder - request > 0)
+                .reduce((request1, request2) -> Math.min(currentHeadCylinder - request1, currentHeadCylinder - request2))
+                .orElse(null);
+    }
 }

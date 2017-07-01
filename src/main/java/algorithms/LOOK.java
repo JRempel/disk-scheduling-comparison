@@ -1,11 +1,10 @@
 package algorithms;
 
 /**
- * The SCAN algorithm selects requests that are nearest to the current head position and in
- * the direction the head is traveling. When it hits the maximum or minimum cylinder, it
- * repeats the process while moving in the opposite direction.
+ * The LOOK algorithm behaves the same as SCAN, with the exception that it doesn't travel to the
+ * min or max cylinder if there are no requests between that and it's current position.
  */
-public class SCAN extends AbstractDiskScheduler {
+public class LOOK extends AbstractDiskScheduler {
     private enum Direction {
         UP, DOWN
     }
@@ -18,7 +17,6 @@ public class SCAN extends AbstractDiskScheduler {
                     nextRequest = getNextRequestUp();
                     if (nextRequest == null) {
                         direction = Direction.DOWN;
-                        totalHeadMovements += (MAX_DISK_CYLINDER - currentHeadCylinder) * 2;
                         nextRequest = getNextRequestDown();
                     }
                     break;
@@ -26,7 +24,6 @@ public class SCAN extends AbstractDiskScheduler {
                     nextRequest = getNextRequestDown();
                     if (nextRequest == null) {
                         direction = Direction.UP;
-                        totalHeadMovements += (currentHeadCylinder - MIN_DISK_CYLINDER) * 2;
                         nextRequest = getNextRequestUp();
                     }
                     break;
