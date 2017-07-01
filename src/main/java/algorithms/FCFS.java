@@ -4,7 +4,7 @@ package algorithms;
  * The FCFS (First-Come, First-Serve) algorithm simply processes requests in the order which
  * they appear in the request queue.
  */
-public class FCFS extends DiskSchedulerImpl {
+public class FCFS extends AbstractDiskScheduler {
     public void run() {
         for (int request: requestQueue) {
             validateRequest(request, getClass());

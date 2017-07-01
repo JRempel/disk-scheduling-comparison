@@ -6,7 +6,7 @@ import exceptions.EmptyQueueException;
  * The SSTF (Shortest Seek Time First) algorithm selects requests based on which one is closest
  * to the current head position.
  */
-public class SSTF extends DiskSchedulerImpl {
+public class SSTF extends AbstractDiskScheduler {
     public void run() {
         int nextRequest;
         while (!requestQueue.isEmpty()) {

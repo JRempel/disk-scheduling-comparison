@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import exceptions.InvalidRequestException;
 
-public abstract class DiskSchedulerImpl implements DiskScheduler {
+public abstract class AbstractDiskScheduler implements DiskScheduler {
     protected ArrayList<Integer> requestQueue;
     protected ArrayList<Integer> orderProcessed = new ArrayList<>();
     protected int totalHeadMovements = 0;
