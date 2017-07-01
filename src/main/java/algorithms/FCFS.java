@@ -6,11 +6,14 @@ package algorithms;
  */
 public class FCFS extends AbstractDiskScheduler {
     public void run() {
-        for (int request: requestQueue) {
-            validateRequest(request, getClass());
-            orderProcessed.add(request);
-            totalHeadMovements += Math.abs(currentHeadCylinder - request);
-            currentHeadCylinder = request;
+        Integer nextRequest;
+        while(!requestQueue.isEmpty()) {
+            nextRequest = requestQueue.get(0);
+            validateRequest(nextRequest, getClass());
+            orderProcessed.add(nextRequest);
+            totalHeadMovements += Math.abs(currentHeadCylinder - nextRequest);
+            currentHeadCylinder = nextRequest;
+            requestQueue.remove(nextRequest);
         }
     }
 }
