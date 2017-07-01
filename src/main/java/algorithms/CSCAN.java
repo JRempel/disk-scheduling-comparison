@@ -16,7 +16,7 @@ public class CSCAN extends AbstractDiskScheduler {
                 currentHeadCylinder = 0;
                 nextRequest = getNextRequestUp();
             }
-            validateRequest(nextRequest, getClass());
+            validateRequest(nextRequest);
             orderProcessed.add(nextRequest);
             totalHeadMovements += nextRequest - currentHeadCylinder;
             currentHeadCylinder = nextRequest;

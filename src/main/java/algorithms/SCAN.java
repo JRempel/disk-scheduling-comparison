@@ -31,7 +31,7 @@ public class SCAN extends AbstractDiskScheduler {
                     }
                     break;
             }
-            validateRequest(nextRequest, getClass());
+            validateRequest(nextRequest);
             orderProcessed.add(nextRequest);
             totalHeadMovements += Math.abs(currentHeadCylinder - nextRequest);
             currentHeadCylinder = nextRequest;

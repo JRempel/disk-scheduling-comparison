@@ -11,6 +11,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     protected int currentHeadCylinder = 0;
     protected static final int MIN_DISK_CYLINDER = 0;
     protected static final int MAX_DISK_CYLINDER = 200;
+    private static final String RESULTS_FORMAT = "%s\nTotal Head Movements: %s\nOrder Processed: %s\n\n";
 
     public int getTotalHeadMovements() {
         return totalHeadMovements;
@@ -37,9 +38,9 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
                         .allMatch(request -> request >= MIN_DISK_CYLINDER &&request <= MAX_DISK_CYLINDER);
     }
 
-    protected void validateRequest(Integer request, Class clazz) {
+    protected void validateRequest(Integer request) {
         if (request == null || request < MIN_DISK_CYLINDER || request > MAX_DISK_CYLINDER) {
-            throw new InvalidRequestException(request, clazz);
+            throw new InvalidRequestException(request, getClass());
         }
     }
 
@@ -57,5 +58,9 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
                 .filter(request -> currentHeadCylinder - request > 0)
                 .reduce((request1, request2) -> Math.min(currentHeadCylinder - request1, currentHeadCylinder - request2))
                 .orElse(null);
+    }
+
+    public void printResults() {
+        System.out.println(String.format(RESULTS_FORMAT, getClass(), totalHeadMovements, orderProcessed));
     }
 }

@@ -15,7 +15,7 @@ public class SSTF extends AbstractDiskScheduler {
                     .reduce((request1, request2) -> Math.abs(currentHeadCylinder - request1) < Math.abs(currentHeadCylinder - request2) ? request1 : request2)
                     .orElseThrow(() -> new EmptyQueueException(getClass()));
 
-            validateRequest(nextRequest, getClass());
+            validateRequest(nextRequest);
             orderProcessed.add(nextRequest);
             totalHeadMovements += Math.abs(currentHeadCylinder - nextRequest);
             currentHeadCylinder = nextRequest;

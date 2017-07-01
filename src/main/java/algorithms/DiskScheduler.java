@@ -26,4 +26,6 @@ public interface DiskScheduler {
      * @return - the total number of head movements after running the scheduler.
      */
     int getTotalHeadMovements();
+
+    void printResults();
 }
