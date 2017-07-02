@@ -105,6 +105,26 @@ public class AbstractDiskSchedulerTest {
     }
 
     @Test
+    public void calculateChangesTest() {
+        int nextRequest = 3;
+        int initialCylinder = 0;
+        scheduler.currentHeadCylinder = initialCylinder;
+        scheduler.setRequestQueue(new ArrayList<>());
+        scheduler.requestQueue.add(nextRequest);
+
+        scheduler.calculateChanges(nextRequest);
+
+        assertEquals("Expected total head movements to equal " + (nextRequest - initialCylinder) + ".",
+                nextRequest - initialCylinder, scheduler.totalHeadMovements);
+        assertEquals("Expected final head cylinder location to equal " + nextRequest + ".",
+                nextRequest, scheduler.currentHeadCylinder);
+        assertTrue("Expected order proccessed to contain " + nextRequest + ".",
+                scheduler.orderProcessed.contains(nextRequest));
+        assertTrue("Expected request queue to be empty after test.",
+                scheduler.requestQueue.isEmpty());
+    }
+
+    @Test
     public void getNextRequestUpTest() {
         ArrayList<Integer> queue = new ArrayList<>();
         scheduler.requestQueue = queue;

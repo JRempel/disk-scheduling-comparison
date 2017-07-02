@@ -46,6 +46,14 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
         }
     }
 
+    void calculateChanges(Integer nextRequest) {
+        validateRequest(nextRequest);
+        orderProcessed.add(nextRequest);
+        totalHeadMovements += Math.abs(currentHeadCylinder - nextRequest);
+        currentHeadCylinder = nextRequest;
+        requestQueue.remove(nextRequest);
+    }
+
     Integer getNextRequestUp() {
         return requestQueue
                 .stream()

@@ -21,7 +21,7 @@ public class SCAN extends AbstractDiskScheduler {
     }
 
     public void run() {
-        Integer nextRequest = 0;
+        Integer nextRequest = null;
         while (!requestQueue.isEmpty()) {
             switch (currentDirection) {
                 case UP:
@@ -41,11 +41,7 @@ public class SCAN extends AbstractDiskScheduler {
                     }
                     break;
             }
-            validateRequest(nextRequest);
-            orderProcessed.add(nextRequest);
-            totalHeadMovements += Math.abs(currentHeadCylinder - nextRequest);
-            currentHeadCylinder = nextRequest;
-            requestQueue.remove(nextRequest);
+            calculateChanges(nextRequest);
         }
     }
 }

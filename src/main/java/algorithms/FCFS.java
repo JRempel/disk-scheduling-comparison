@@ -13,11 +13,7 @@ public class FCFS extends AbstractDiskScheduler {
         Integer nextRequest;
         while(!requestQueue.isEmpty()) {
             nextRequest = requestQueue.get(0);
-            validateRequest(nextRequest);
-            orderProcessed.add(nextRequest);
-            totalHeadMovements += Math.abs(currentHeadCylinder - nextRequest);
-            currentHeadCylinder = nextRequest;
-            requestQueue.remove(nextRequest);
+            calculateChanges(nextRequest);
         }
     }
 }

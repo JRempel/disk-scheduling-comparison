@@ -33,11 +33,7 @@ public class LOOK extends AbstractDiskScheduler {
                     }
                     break;
             }
-            validateRequest(nextRequest);
-            orderProcessed.add(nextRequest);
-            totalHeadMovements += Math.abs(currentHeadCylinder - nextRequest);
-            currentHeadCylinder = nextRequest;
-            requestQueue.remove(nextRequest);
+            calculateChanges(nextRequest);
         }
     }
 }
