@@ -49,7 +49,7 @@ public class OSDATest {
             add(finalCylinder);
             add(firstCylinder);
         }};
-        ArrayList<Integer> expectedOrder = new ArrayList<Integer>() {{z
+        ArrayList<Integer> expectedOrder = new ArrayList<Integer>() {{
             add(finalCylinder);
         }};
         scheduler.setRequestQueue(queue);
