@@ -15,8 +15,8 @@ public class SCAN extends AbstractDiskScheduler {
 
     private Direction currentDirection;
 
-    public SCAN() {
-        super();
+    public SCAN(int MIN_DISK_CYLINDER, int MAX_DISK_CYLINDER) {
+        super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
         currentDirection = UP;
     }
 

@@ -10,7 +10,9 @@ import static org.junit.Assert.assertTrue;
 public class LOOKTest {
     @Test
     public void testLOOKBounceTop() {
-        AbstractDiskScheduler scheduler = new LOOK();
+        int maxCylinder = 199;
+        int minCylinder = 0;
+        AbstractDiskScheduler scheduler = new LOOK(minCylinder, maxCylinder);
         ArrayList<Integer> queue = new ArrayList<Integer>() {{
             add(40);
             add(100);
@@ -37,7 +39,9 @@ public class LOOKTest {
 
     @Test
     public void testLOOKBounceBottom() {
-        AbstractDiskScheduler scheduler = new LOOK();
+        int maxCylinder = 199;
+        int minCylinder = 0;
+        AbstractDiskScheduler scheduler = new LOOK(minCylinder, maxCylinder);
         ArrayList<Integer> queue = new ArrayList<Integer>() {{
             add(40);
             add(35);

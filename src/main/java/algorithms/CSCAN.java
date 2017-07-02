@@ -9,6 +9,10 @@ package algorithms;
  * Note: the jump from max to min cylinders isn't counted against head movements.
  */
 public class CSCAN extends AbstractDiskScheduler {
+    public CSCAN(int MIN_DISK_CYLINDER, int MAX_DISK_CYLINDER) {
+        super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
+    }
+
     public void run() {
         Integer nextRequest;
         while (!requestQueue.isEmpty()) {

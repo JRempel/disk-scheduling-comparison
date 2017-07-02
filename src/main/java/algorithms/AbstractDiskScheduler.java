@@ -9,9 +9,14 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     protected ArrayList<Integer> orderProcessed = new ArrayList<>();
     protected int totalHeadMovements = 0;
     protected int currentHeadCylinder = 0;
-    protected static final int MIN_DISK_CYLINDER = 0;
-    protected static final int MAX_DISK_CYLINDER = 200;
+    protected final int MIN_DISK_CYLINDER;
+    protected final int MAX_DISK_CYLINDER;
     private static final String RESULTS_FORMAT = "%s\nTotal Head Movements: %s\nOrder Processed: %s\n";
+
+    protected AbstractDiskScheduler(int MIN_DISK_CYLINDER, int MAX_DISK_CYLINDER) {
+        this.MIN_DISK_CYLINDER = MIN_DISK_CYLINDER;
+        this.MAX_DISK_CYLINDER = MAX_DISK_CYLINDER;
+    }
 
     public boolean setRequestQueue(ArrayList<Integer> queue){
         if (isValidRequestQueue(queue)) {

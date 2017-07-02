@@ -8,8 +8,10 @@ import static org.junit.Assert.assertTrue;
 
 public class SSTFTest {
     @Test
-    public void testSSTF() {
-        AbstractDiskScheduler scheduler = new SSTF();
+    public void testSSTF() throws Exception {
+        int maxCylinder = 199;
+        int minCylinder = 0;
+        AbstractDiskScheduler scheduler = new SSTF(minCylinder, maxCylinder);
         ArrayList<Integer> queue = new ArrayList<Integer>() {{
             add(100);
             add(40);

@@ -1,25 +1,35 @@
 package algorithms;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 import exceptions.InvalidRequestException;
 
-import static algorithms.AbstractDiskScheduler.MAX_DISK_CYLINDER;
-import static algorithms.AbstractDiskScheduler.MIN_DISK_CYLINDER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.withSettings;
 
 public class AbstractDiskSchedulerTest {
+    private int maxCylinder = 199;
+    private int minCylinder = 0;
+    private AbstractDiskScheduler scheduler;
+
+    @Before
+    public void setup() {
+        scheduler = mock(AbstractDiskScheduler.class, withSettings()
+                .useConstructor(minCylinder, maxCylinder)
+                .defaultAnswer(CALLS_REAL_METHODS));
+    }
 
     @Test
     public void setRequestQueueTest() {
-        AbstractDiskScheduler scheduler = spy(AbstractDiskScheduler.class);
         ArrayList<Integer> queue = new ArrayList<Integer>() {{
            add(1);
         }};
@@ -32,7 +42,6 @@ public class AbstractDiskSchedulerTest {
 
     @Test
     public void resetTest() {
-        AbstractDiskScheduler scheduler = spy(AbstractDiskScheduler.class);
         scheduler.totalHeadMovements = 5;
         scheduler.currentHeadCylinder = 5;
         scheduler.requestQueue = new ArrayList<Integer>() {{
@@ -50,41 +59,38 @@ public class AbstractDiskSchedulerTest {
 
     @Test
     public void isValidRequestQueueFailTest() {
-        AbstractDiskScheduler scheduler = spy(AbstractDiskScheduler.class);
         ArrayList<Integer> queue = new ArrayList<>();
         boolean isValid;
 
-        queue.add(MIN_DISK_CYLINDER - 1);
+        queue.add(minCylinder - 1);
         isValid = scheduler.setRequestQueue(queue);
         assertFalse("Request queue should not take requests less than MIN_DISK_CYLINDER.", isValid);
 
         queue.clear();
-        queue.add(MAX_DISK_CYLINDER + 1);
+        queue.add(maxCylinder + 1);
         isValid = scheduler.setRequestQueue(queue);
         assertFalse("Request queue should not take requests more than MAX_DISK_CYLINDER.", isValid);
 
         isValid = scheduler.setRequestQueue(null);
         assertFalse("Request queue should not be null", isValid);
 
-        queue.add(MAX_DISK_CYLINDER);
-        queue.add(MAX_DISK_CYLINDER);
+        queue.add(maxCylinder);
+        queue.add(minCylinder);
         isValid = scheduler.setRequestQueue(queue);
         assertFalse("Request queue should not contain duplicates", isValid);
     }
 
     @Test
     public void validateRequestTest() {
-        AbstractDiskScheduler scheduler = spy(AbstractDiskScheduler.class);
-
         try {
-            scheduler.validateRequest(MIN_DISK_CYLINDER - 1);
+            scheduler.validateRequest(minCylinder - 1);
             fail("Request should not be less than MIN_DISK_CYLINDER.");
         } catch (RuntimeException e) {
             assertTrue(e instanceof InvalidRequestException);
         }
 
         try {
-            scheduler.validateRequest(MAX_DISK_CYLINDER + 1);
+            scheduler.validateRequest(maxCylinder + 1);
             fail("Request should not be more than MAX_DISK_CYLINDER.");
         } catch (RuntimeException e) {
             assertTrue(e instanceof InvalidRequestException);
@@ -100,7 +106,6 @@ public class AbstractDiskSchedulerTest {
 
     @Test
     public void getNextRequestUpTest() {
-        AbstractDiskScheduler scheduler = spy(AbstractDiskScheduler.class);
         ArrayList<Integer> queue = new ArrayList<>();
         scheduler.requestQueue = queue;
         Integer next, nextExpected, nextNotExpected;
@@ -124,7 +129,6 @@ public class AbstractDiskSchedulerTest {
 
     @Test
     public void getNextRequestDownTest() {
-        AbstractDiskScheduler scheduler = spy(AbstractDiskScheduler.class);
         ArrayList<Integer> queue = new ArrayList<>();
         scheduler.requestQueue = queue;
         Integer next, nextExpected, nextNotExpected;

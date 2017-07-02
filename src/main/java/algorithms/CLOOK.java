@@ -8,6 +8,10 @@ package algorithms;
  * Note: the jump from max to min requests isn't counted against head movements.
  */
 public class CLOOK extends AbstractDiskScheduler {
+    public CLOOK(int MIN_DISK_CYLINDER, int MAX_DISK_CYLINDER) {
+        super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
+    }
+
     public void run() {
         Integer nextRequest;
         boolean cycle = false;

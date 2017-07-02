@@ -7,6 +7,10 @@ import exceptions.EmptyQueueException;
  * to the current head position.
  */
 public class SSTF extends AbstractDiskScheduler {
+    public SSTF(int MIN_DISK_CYLINDER, int MAX_DISK_CYLINDER) {
+        super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
+    }
+
     public void run() {
         int nextRequest;
         while (!requestQueue.isEmpty()) {

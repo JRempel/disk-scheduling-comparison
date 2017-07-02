@@ -8,6 +8,11 @@ public class LOOK extends AbstractDiskScheduler {
     private enum Direction {
         UP, DOWN
     }
+
+    public LOOK(int MIN_DISK_CYLINDER, int MAX_DISK_CYLINDER) {
+        super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
+    }
+
     public void run() {
         Integer nextRequest = 0;
         Direction direction = Direction.UP;

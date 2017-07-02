@@ -10,7 +10,9 @@ import static org.junit.Assert.assertTrue;
 public class CLOOKTest {
     @Test
     public void testCLOOK() {
-        AbstractDiskScheduler scheduler = new CLOOK();
+        int maxCylinder = 199;
+        int minCylinder = 0;
+        AbstractDiskScheduler scheduler = new CLOOK(minCylinder, maxCylinder);
         ArrayList<Integer> queue = new ArrayList<Integer>() {{
             add(100);
             add(35);

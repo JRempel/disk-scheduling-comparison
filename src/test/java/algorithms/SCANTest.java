@@ -10,7 +10,9 @@ import static org.junit.Assert.assertTrue;
 public class SCANTest {
     @Test
     public void testSCANBounceTop() {
-        AbstractDiskScheduler scheduler = new SCAN();
+        int maxCylinder = 199;
+        int minCylinder = 0;
+        AbstractDiskScheduler scheduler = new SCAN(minCylinder, maxCylinder);
         ArrayList<Integer> queue = new ArrayList<Integer>() {{
             add(40);
             add(100);
@@ -24,10 +26,11 @@ public class SCANTest {
         scheduler.setRequestQueue(queue);
         scheduler.currentHeadCylinder = 50;
 
+
         scheduler.run();
 
-        assertEquals("Expected total head movements to equal 315.",
-                315, scheduler.totalHeadMovements);
+        assertEquals("Expected total head movements to equal 313.",
+                313, scheduler.totalHeadMovements);
         assertEquals("Expected final currentHeadCylinder to be equal 35.",
                 35, scheduler.currentHeadCylinder);
         assertEquals("Expected the order processed to be equal to the test expected order.",
@@ -37,7 +40,9 @@ public class SCANTest {
 
     @Test
     public void testSCANBounceBottom() {
-        AbstractDiskScheduler scheduler = new SCAN();
+        int maxCylinder = 199;
+        int minCylinder = 0;
+        AbstractDiskScheduler scheduler = new SCAN(minCylinder, maxCylinder);
         ArrayList<Integer> queue = new ArrayList<Integer>() {{
             add(40);
             add(100);
@@ -60,8 +65,8 @@ public class SCANTest {
 
         scheduler.run();
 
-        assertEquals("Expected total head movements to equal 250.",
-                250, scheduler.totalHeadMovements);
+        assertEquals("Expected total head movements to equal 248.",
+                248, scheduler.totalHeadMovements);
         assertEquals("Expected final currentHeadCylinder to be equal 50.",
                 50, scheduler.currentHeadCylinder);
         assertEquals("Expected the order processed to be equal to the test expected order.",
