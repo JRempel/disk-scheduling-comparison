@@ -5,6 +5,8 @@ package algorithms;
  * position and in the direction the head is traveling. C-SCAN effectively treats the disk as
  * a circular list by jumping from the max cylinder to the min without changing directions
  * (as with SCAN).
+ *
+ * Note: the jump from max to min cylinders isn't counted against head movements.
  */
 public class CSCAN extends AbstractDiskScheduler {
     public void run() {
