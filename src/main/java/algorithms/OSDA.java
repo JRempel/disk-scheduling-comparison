@@ -6,6 +6,8 @@ import java.util.Collections;
  * The OSDA (Optimized Disk Scheduling Algorithm) selects the next request by initially jumping to
  * the nearest max or min request cylinder, after which it performs a linear scan, similar to LOOK.
  * As with LOOK, the initial jump is not counted against the total head movements.
+ *
+ * Referenced from: https://arxiv.org/ftp/arxiv/papers/1403/1403.0334.pdf
  */
 public class OSDA extends AbstractDiskScheduler {
     enum Direction {
