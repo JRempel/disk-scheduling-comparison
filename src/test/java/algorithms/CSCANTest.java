@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 public class CSCANTest {
     int maxCylinder = 199;
     int minCylinder = 0;
+
     @Test
     public void testCSCAN() {
         AbstractDiskScheduler scheduler = new CSCAN(minCylinder, maxCylinder);
