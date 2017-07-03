@@ -2,8 +2,11 @@ package algorithms;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import exceptions.InvalidRequestException;
 
@@ -12,8 +15,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 public class AbstractDiskSchedulerTest {
@@ -26,6 +35,55 @@ public class AbstractDiskSchedulerTest {
         scheduler = mock(AbstractDiskScheduler.class, withSettings()
                 .useConstructor(minCylinder, maxCylinder)
                 .defaultAnswer(CALLS_REAL_METHODS));
+    }
+
+    @Test
+    public void runNormalTest() {
+        scheduler.setRequestQueue(new ArrayList<Integer>() {{
+            add(1);
+        }});
+        doNothing().when(scheduler).preRun();
+        when(scheduler.selectNext()).thenReturn(1);
+
+        scheduler.run();
+
+        verify(scheduler, times(1)).calculateChanges(1);
+        assertTrue("Request queue should be empty after processing.",
+                scheduler.requestQueue.isEmpty());
+    }
+
+    @Test
+    public void runPauseTest() {
+        scheduler.setRequestQueue(new ArrayList<Integer>() {{
+            add(1);
+        }});
+        scheduler.addPauseConditions(scheduler -> {
+            return ((AbstractDiskScheduler) scheduler).requestQueue.isEmpty();
+        });
+        doNothing().when(scheduler).preRun();
+        when(scheduler.selectNext()).thenReturn(1);
+
+        scheduler.run();
+
+        assertTrue("Request queue should still contain objects.",
+                !scheduler.requestQueue.isEmpty());
+    }
+
+    @Test
+    public void runCustomCalculateChangesTest() {
+        scheduler.setRequestQueue(new ArrayList<Integer>() {{
+            add(1);
+        }});
+        doNothing().when(scheduler).preRun();
+        when(scheduler.selectNext()).thenAnswer(invocationOnMock -> {
+            scheduler.requestQueue.remove((Integer) 1);
+            return 1;
+        });
+        scheduler.customCalculateChanges = true;
+
+        scheduler.run();
+
+        verify(scheduler, times(0)).calculateChanges(any(Integer.class));
     }
 
     @Test
@@ -108,6 +166,15 @@ public class AbstractDiskSchedulerTest {
 
         assertEquals("Expected pause conditions list to be the sum of its inputs.",
                 1, scheduler.pauseConditions.size());
+    }
+
+    @Test
+    public void clearPauseConditionsTest() {
+        scheduler.addPauseConditions(x -> x.equals(x));
+        scheduler.clearPauseConditions();
+
+        assertTrue("Pause conditions should be cleared.",
+                scheduler.pauseConditions.isEmpty());
     }
 
     @Test

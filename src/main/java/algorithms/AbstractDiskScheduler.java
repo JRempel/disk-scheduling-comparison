@@ -51,6 +51,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
         }
     }
 
+    // Require subclasses implement a preRun setup method and method of selecting the next cylinder
     protected abstract void preRun();
     protected abstract Integer selectNext();
 
@@ -75,6 +76,10 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
                 .forEach(pauseConditions::add);
     }
 
+    public void clearPauseConditions() {
+        pauseConditions.clear();
+    }
+
     public void reset() {
         totalHeadMovements = 0;
         currentHeadCylinder = 0;
@@ -90,12 +95,17 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
                 queue.stream().distinct().count() == queue.size();
     }
 
+
     void validateRequest(Integer request) {
         if (request == null || request < MIN_DISK_CYLINDER || request > MAX_DISK_CYLINDER) {
             throw new InvalidRequestException(request, getClass());
         }
     }
 
+    /**
+     * Update properties based on the next selected cylinder.
+     * @param nextRequest - the request chosen to be serviced next.
+     */
     void calculateChanges(Integer nextRequest) {
         validateRequest(nextRequest);
         orderProcessed.add(nextRequest);
