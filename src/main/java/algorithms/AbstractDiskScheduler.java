@@ -2,10 +2,7 @@ package algorithms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.Predicate;
-
-import javax.swing.text.html.Option;
 
 import exceptions.InvalidRequestException;
 
