@@ -9,6 +9,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     protected ArrayList<Integer> orderProcessed = new ArrayList<>();
     protected int totalHeadMovements = 0;
     protected int currentHeadCylinder = 0;
+    protected int requestsServiced = 0;
     protected final int MIN_DISK_CYLINDER;
     protected final int MAX_DISK_CYLINDER;
     private static final String RESULTS_FORMAT = "%s\nTotal Head Movements: %s\nOrder Processed: %s\n";
@@ -26,9 +27,18 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
         return false;
     }
 
+    public boolean addToRequestQueue(ArrayList<Integer> queue) {
+        if (isValidRequestQueue(queue) && requestQueue != null) {
+            queue.forEach(x -> requestQueue.add(x));
+            return true;
+        }
+        return false;
+    }
+
     public void reset() {
         totalHeadMovements = 0;
         currentHeadCylinder = 0;
+        requestsServiced = 0;
         requestQueue = null;
         orderProcessed = new ArrayList<>();
 
@@ -52,6 +62,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
         totalHeadMovements += Math.abs(currentHeadCylinder - nextRequest);
         currentHeadCylinder = nextRequest;
         requestQueue.remove(nextRequest);
+        requestsServiced++;
     }
 
     Integer getNextRequestUp() {

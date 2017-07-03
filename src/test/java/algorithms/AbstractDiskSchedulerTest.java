@@ -44,6 +44,7 @@ public class AbstractDiskSchedulerTest {
     public void resetTest() {
         scheduler.totalHeadMovements = 5;
         scheduler.currentHeadCylinder = 5;
+        scheduler.requestsServiced = 5;
         scheduler.requestQueue = new ArrayList<Integer>() {{
             add(1);
         }};
@@ -54,7 +55,8 @@ public class AbstractDiskSchedulerTest {
         assertEquals("Expected total head movements to be reset to 0.", 0, scheduler.totalHeadMovements);
         assertEquals("Expected current head cylinder to be reset to 0.", 0, scheduler.currentHeadCylinder);
         assertNull("Expected request queue to be null.", scheduler.requestQueue);
-        assertTrue("Expected order proccessed list to be empty.", scheduler.orderProcessed.isEmpty());
+        assertTrue("Expected order processed list to be empty.", scheduler.orderProcessed.isEmpty());
+        assertEquals("Expect requests service property to be 0.", 0, scheduler.requestsServiced);
     }
 
     @Test
@@ -122,6 +124,7 @@ public class AbstractDiskSchedulerTest {
                 scheduler.orderProcessed.contains(nextRequest));
         assertTrue("Expected request queue to be empty after test.",
                 scheduler.requestQueue.isEmpty());
+        assertEquals("Expected requests serviced to be 1.", 1, scheduler.requestsServiced);
     }
 
     @Test
