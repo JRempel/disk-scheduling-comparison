@@ -57,9 +57,7 @@ public class AbstractDiskSchedulerTest {
         scheduler.setRequestQueue(new ArrayList<Integer>() {{
             add(1);
         }});
-        scheduler.addPauseConditions(scheduler -> {
-            return ((AbstractDiskScheduler) scheduler).requestQueue.isEmpty();
-        });
+        scheduler.addPauseConditions(scheduler -> !((AbstractDiskScheduler) scheduler).requestQueue.isEmpty());
         doNothing().when(scheduler).preRun();
         when(scheduler.selectNext()).thenReturn(1);
 

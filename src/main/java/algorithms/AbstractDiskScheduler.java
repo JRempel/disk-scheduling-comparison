@@ -29,7 +29,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
 
     public void run() {
         Integer next;
-        // Run setup of algorithm if available.
+        // Run setup of algorithm if implemented.
         preRun();
         while (!requestQueue.isEmpty()) {
             // Check conditions for pausing the scheduler
