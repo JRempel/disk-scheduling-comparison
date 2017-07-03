@@ -49,6 +49,7 @@ public class AbstractDiskSchedulerTest {
             add(1);
         }};
         scheduler.orderProcessed.add(1);
+        scheduler.pauseConditions.add(x -> x.equals(x));
 
         scheduler.reset();
 
@@ -57,6 +58,7 @@ public class AbstractDiskSchedulerTest {
         assertNull("Expected request queue to be null.", scheduler.requestQueue);
         assertTrue("Expected order processed list to be empty.", scheduler.orderProcessed.isEmpty());
         assertEquals("Expect requests service property to be 0.", 0, scheduler.requestsServiced);
+        assertTrue("Expected pause conditions list to be empty.", scheduler.pauseConditions.isEmpty());
     }
 
     @Test
@@ -80,6 +82,32 @@ public class AbstractDiskSchedulerTest {
         queue.add(minCylinder);
         isValid = scheduler.setRequestQueue(queue);
         assertFalse("Request queue should not contain duplicates", isValid);
+    }
+
+    @Test
+    public void addToRequestQueueTest() {
+        ArrayList<Integer> queue = new ArrayList<Integer>() {{
+            add(1);
+        }};
+        scheduler.setRequestQueue(queue);
+
+        ArrayList<Integer> additionalQueue = new ArrayList<Integer>() {{
+            add(2);
+        }};
+        scheduler.addToRequestQueue(additionalQueue);
+
+        assertEquals("Expected request queue size to be the sum of inputs.",
+                queue.size() + additionalQueue.size(), scheduler.requestQueue.size());
+    }
+
+    @Test
+    public void addToPauseConditions() {
+        assertTrue("Expected initial pause conditions list to be empty",
+                scheduler.pauseConditions.isEmpty());
+        scheduler.addPauseConditions(x -> x.equals(x));
+
+        assertEquals("Expected pause conditions list to be the sum of its inputs.",
+                1, scheduler.pauseConditions.size());
     }
 
     @Test

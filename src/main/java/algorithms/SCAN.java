@@ -20,9 +20,10 @@ public class SCAN extends AbstractDiskScheduler {
         currentDirection = UP;
     }
 
-    public void run() {
+    protected void preRun() {}
+
+    protected Integer selectNext() {
         Integer nextRequest = null;
-        while (!requestQueue.isEmpty()) {
             switch (currentDirection) {
                 case UP:
                     nextRequest = getNextRequestUp();
@@ -41,7 +42,6 @@ public class SCAN extends AbstractDiskScheduler {
                     }
                     break;
             }
-            calculateChanges(nextRequest);
-        }
+            return nextRequest;
     }
 }

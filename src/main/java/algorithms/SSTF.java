@@ -11,15 +11,14 @@ public class SSTF extends AbstractDiskScheduler {
         super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
     }
 
-    public void run() {
+    protected void preRun() {}
+
+    public Integer selectNext() {
         int nextRequest;
-        while (!requestQueue.isEmpty()) {
             nextRequest = requestQueue
                     .stream()
                     .reduce((request1, request2) -> Math.abs(currentHeadCylinder - request1) < Math.abs(currentHeadCylinder - request2) ? request1 : request2)
                     .orElseThrow(() -> new EmptyQueueException(getClass()));
-
-            calculateChanges(nextRequest);
-        }
+        return nextRequest;
     }
 }

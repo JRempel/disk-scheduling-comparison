@@ -1,23 +1,58 @@
 package algorithms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import javax.swing.text.html.Option;
 
 import exceptions.InvalidRequestException;
 
 public abstract class AbstractDiskScheduler implements DiskScheduler {
+    private static final String RESULTS_FORMAT = "%s\nTotal Head Movements: %s\nOrder Processed: %s\n";
+
     protected ArrayList<Integer> requestQueue;
     protected ArrayList<Integer> orderProcessed = new ArrayList<>();
+    protected ArrayList<Predicate<AbstractDiskScheduler>> pauseConditions = new ArrayList<>();
     protected int totalHeadMovements = 0;
     protected int currentHeadCylinder = 0;
     protected int requestsServiced = 0;
+    protected boolean customCalculateChanges = false;
     protected final int MIN_DISK_CYLINDER;
     protected final int MAX_DISK_CYLINDER;
-    private static final String RESULTS_FORMAT = "%s\nTotal Head Movements: %s\nOrder Processed: %s\n";
 
     protected AbstractDiskScheduler(int MIN_DISK_CYLINDER, int MAX_DISK_CYLINDER) {
         this.MIN_DISK_CYLINDER = MIN_DISK_CYLINDER;
         this.MAX_DISK_CYLINDER = MAX_DISK_CYLINDER;
     }
+
+    public void run() {
+        Integer next;
+        // Run setup of algorithm if available.
+        preRun();
+        while (!requestQueue.isEmpty()) {
+            // Check conditions for pausing the scheduler
+            Predicate<AbstractDiskScheduler> pauseCondition = pauseConditions.stream()
+                    .filter(p -> p.test(this))
+                    .findFirst()
+                    .orElse(null);
+
+            if (pauseCondition != null) {
+                pauseConditions.remove(pauseCondition);
+                return;
+            }
+
+            next = selectNext();
+            // Don't calculate changes if algorithm has implemented a custom solution.
+            if (!customCalculateChanges) {
+                calculateChanges(next);
+            }
+        }
+    }
+
+    protected abstract void preRun();
+    protected abstract Integer selectNext();
 
     public boolean setRequestQueue(ArrayList<Integer> queue){
         if (isValidRequestQueue(queue)) {
@@ -35,13 +70,18 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
         return false;
     }
 
+    public void addPauseConditions(Predicate... predicates) {
+        Arrays.stream(predicates)
+                .forEach(pauseConditions::add);
+    }
+
     public void reset() {
         totalHeadMovements = 0;
         currentHeadCylinder = 0;
         requestsServiced = 0;
         requestQueue = null;
         orderProcessed = new ArrayList<>();
-
+        pauseConditions = new ArrayList<>();
     }
 
     private boolean isValidRequestQueue(ArrayList<Integer> queue) {

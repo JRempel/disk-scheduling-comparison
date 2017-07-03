@@ -9,31 +9,34 @@ public class LOOK extends AbstractDiskScheduler {
         UP, DOWN
     }
 
+    private Direction direction;
+
     public LOOK(int MIN_DISK_CYLINDER, int MAX_DISK_CYLINDER) {
         super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
     }
 
-    public void run() {
+    protected void preRun() {
+        direction = Direction.UP;
+    }
+
+    public Integer selectNext() {
         Integer nextRequest = 0;
-        Direction direction = Direction.UP;
-        while (!requestQueue.isEmpty()) {
-            switch (direction) {
-                case UP:
-                    nextRequest = getNextRequestUp();
-                    if (nextRequest == null) {
-                        direction = Direction.DOWN;
-                        nextRequest = getNextRequestDown();
-                    }
-                    break;
-                case DOWN:
+        switch (direction) {
+            case UP:
+                nextRequest = getNextRequestUp();
+                if (nextRequest == null) {
+                    direction = Direction.DOWN;
                     nextRequest = getNextRequestDown();
-                    if (nextRequest == null) {
-                        direction = Direction.UP;
-                        nextRequest = getNextRequestUp();
-                    }
-                    break;
-            }
-            calculateChanges(nextRequest);
+                }
+                break;
+            case DOWN:
+                nextRequest = getNextRequestDown();
+                if (nextRequest == null) {
+                    direction = Direction.UP;
+                    nextRequest = getNextRequestUp();
+                }
+                break;
         }
+        return nextRequest;
     }
 }

@@ -20,7 +20,7 @@ public class OSDA extends AbstractDiskScheduler {
         super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
     }
 
-    public void run() {
+    protected void preRun() {
         Collections.sort(requestQueue);
         int selection = (Math.abs(currentHeadCylinder - requestQueue.get(0)) > Math.abs(currentHeadCylinder - requestQueue.get(requestQueue.size() - 1))) ? 1 :
                 (Math.abs(currentHeadCylinder - requestQueue.get(0)) < Math.abs(currentHeadCylinder - requestQueue.get(requestQueue.size() - 1))) ? -1 : 0;
@@ -43,18 +43,18 @@ public class OSDA extends AbstractDiskScheduler {
                 currentHeadCylinder = requestQueue.get(0);
                 direction = Direction.UP;
         }
+    }
 
-        while (!requestQueue.isEmpty()) {
-            Integer nextRequest = null;
-            switch (direction) {
-                case UP:
-                    nextRequest = getNextRequestUp();
-                    break;
-                case DOWN:
-                    nextRequest = getNextRequestDown();
-                    break;
-            }
-            calculateChanges(nextRequest);
+    protected Integer selectNext() {
+        Integer nextRequest = null;
+        switch (direction) {
+            case UP:
+                nextRequest = getNextRequestUp();
+                break;
+            case DOWN:
+                nextRequest = getNextRequestDown();
+                break;
         }
+        return nextRequest;
     }
 }

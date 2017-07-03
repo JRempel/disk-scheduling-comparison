@@ -9,11 +9,10 @@ public class FCFS extends AbstractDiskScheduler {
         super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
     }
 
-    public void run() {
-        Integer nextRequest;
-        while(!requestQueue.isEmpty()) {
-            nextRequest = requestQueue.get(0);
-            calculateChanges(nextRequest);
-        }
+    protected void preRun() {
+    }
+
+    public Integer selectNext() {
+        return requestQueue.get(0);
     }
 }

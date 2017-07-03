@@ -13,16 +13,17 @@ public class CSCAN extends AbstractDiskScheduler {
         super(MIN_DISK_CYLINDER, MAX_DISK_CYLINDER);
     }
 
-    public void run() {
+    protected void preRun() {
+    }
+
+    public Integer selectNext() {
         Integer nextRequest;
-        while (!requestQueue.isEmpty()) {
+        nextRequest = getNextRequestUp();
+        if (nextRequest == null) {
+            totalHeadMovements += MAX_DISK_CYLINDER - currentHeadCylinder;
+            currentHeadCylinder = 0;
             nextRequest = getNextRequestUp();
-            if (nextRequest == null) {
-                totalHeadMovements += MAX_DISK_CYLINDER - currentHeadCylinder;
-                currentHeadCylinder = 0;
-                nextRequest = getNextRequestUp();
-            }
-            calculateChanges(nextRequest);
         }
+        return nextRequest;
     }
 }
