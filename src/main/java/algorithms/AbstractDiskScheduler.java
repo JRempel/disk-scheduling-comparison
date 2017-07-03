@@ -25,6 +25,8 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     }
 
     public void run() {
+
+        System.out.println(requestQueue.size());
         Integer next;
         // Run setup of algorithm if implemented.
         preRun();

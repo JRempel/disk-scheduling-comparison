@@ -36,7 +36,7 @@ public class RandomSequenceGenerator {
      * @param numDataPoints - the number of data points to randomly generate.
      * @return
      */
-    private ArrayList<Integer> getUniformRandomSequence(int seed, int numDataPoints) {
+    public ArrayList<Integer> getUniformRandomSequence(int numDataPoints, int seed) {
         if (numDataPoints < 0) {
             throw new InvalidGeneratorParameterException("numDataPoints", getClass(), DATA_POINTS_ERROR);
         }
@@ -61,7 +61,7 @@ public class RandomSequenceGenerator {
      * @param distributionSeed - the seed value for the Gaussian distribution math.
      * @return
      */
-    private ArrayList<Integer> getMultimodalRandomSequence(int numDataPoints, int numPeaks, int peakGeneratorSeed, int peakSelectorSeed, int distributionSeed) {
+    public ArrayList<Integer> getMultimodalRandomSequence(int numDataPoints, int numPeaks, int peakGeneratorSeed, int peakSelectorSeed, int distributionSeed) {
         if (numDataPoints < 0) {
             throw new InvalidGeneratorParameterException("numDataPoints", getClass(), DATA_POINTS_ERROR);
         }
