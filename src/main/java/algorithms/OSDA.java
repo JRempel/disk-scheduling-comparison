@@ -27,8 +27,8 @@ public class OSDA extends AbstractDiskScheduler {
         switch (selection) {
             case 1:
                 currentHeadCylinder = requestQueue.get(requestQueue.size() - 1);
-                requestQueue.remove(requestQueue.get(requestQueue.size() - 1));
                 orderProcessed.add(requestQueue.get(requestQueue.size() - 1));
+                requestQueue.remove(requestQueue.get(requestQueue.size() - 1));
                 direction = Direction.DOWN;
                 break;
             case -1:
