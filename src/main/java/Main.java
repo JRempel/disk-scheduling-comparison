@@ -40,22 +40,22 @@ public class Main {
             add(new OSDA(MIN_CYLINDER, MAX_CYLINDER));
         }};
 
-        ArrayList<Integer> pureRandom = generator.getUniformRandomSequence(SEQUENCE_SIZE, UNIFORM_R_SEED, true);
+        ArrayList<Integer> uniformRandom = generator.getUniformRandomSequence(SEQUENCE_SIZE, UNIFORM_R_SEED, true);
         ArrayList<Integer> multiModalRandom = generator.getMultimodalRandomSequence(SEQUENCE_SIZE,
                 MULTI_MODAL_PEAK_AMOUNT, MULTI_MODAL_PEAK_GEN_SEED, MULTI_MODAL_PEAK_SELECTOR_SEED,
                 MULTI_MODAL_SEED, true);
 
 
-        System.out.println("Pure Random, Equal Groupings:");
-        processEqualSizeGroupings(pureRandom, SEQUENCE_MULTIPLES, schedulers);
+        System.out.println("Uniform Random, Equal Groupings:");
+        processEqualSizeGroupings(uniformRandom, SEQUENCE_MULTIPLES, schedulers);
         clearSchedulers(schedulers);
 
         System.out.println("MultiModal Random, Equal Groupings:");
         processEqualSizeGroupings(multiModalRandom, SEQUENCE_MULTIPLES, schedulers);
         clearSchedulers(schedulers);
 
-        System.out.println("Pure Random, Random Groupings: ");
-        processRandomSizeGroupings(pureRandom, schedulers);
+        System.out.println("Uniform Random, Random Groupings: ");
+        processRandomSizeGroupings(uniformRandom, schedulers);
 
         System.out.println("MultiModal, Random Groupings");
         processRandomSizeGroupings(multiModalRandom, schedulers);
