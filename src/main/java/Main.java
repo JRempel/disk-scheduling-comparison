@@ -3,7 +3,6 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 import algorithms.CLOOK;
 import algorithms.CSCAN;
@@ -16,17 +15,17 @@ import algorithms.SSTF;
 import math.RandomSequenceGenerator;
 
 public class Main {
-    private static int MIN_CYLINDER = 0;
-    private static int MAX_CYLINDER = 511;
-    private static int SEQUENCE_SIZE = 50;
-    private static int UNIFORM_R_SEED = 3;
-    private static int MULTI_MODAL_SEED = 5;
-    private static int MULTI_MODAL_PEAK_GEN_SEED = 7;
-    private static int MULTI_MODAL_PEAK_SELECTOR_SEED = 13;
-    private static int MULTI_MODAL_PEAK_AMOUNT = 8;
-    private static int MIN_GROUP_SIZE = 2;
-    private static int MAX_GROUP_SIZE = 5;
-    private static int[] SEQUENCE_MULTIPLES = {10};
+    private static final int MIN_CYLINDER = 0;
+    private static final int MAX_CYLINDER = 511;
+    private static final int SEQUENCE_SIZE = 50;
+    private static final int UNIFORM_R_SEED = 3;
+    private static final int MULTI_MODAL_SEED = 5;
+    private static final int MULTI_MODAL_PEAK_GEN_SEED = 7;
+    private static final int MULTI_MODAL_PEAK_SELECTOR_SEED = 13;
+    private static final int MULTI_MODAL_PEAK_AMOUNT = 8;
+    private static final int MIN_GROUP_SIZE = 2;
+    private static final int MAX_GROUP_SIZE = 5;
+    private static final int[] SEQUENCE_MULTIPLES = {10};
 
     public static void main(String[] args) {
         RandomSequenceGenerator generator = new RandomSequenceGenerator(MIN_CYLINDER, MAX_CYLINDER);

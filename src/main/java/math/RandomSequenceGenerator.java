@@ -3,7 +3,6 @@ package math;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 import exceptions.InvalidGeneratorParameterException;
 
@@ -11,9 +10,9 @@ public class RandomSequenceGenerator {
     private static final String DATA_POINTS_ERROR = "dataPoints parameter must be zero or greater.";
     private static final String PEAKS_ERROR = "peaks parameter must be one or greater.";
     private static final String MIN_MAX_ERROR = "min and max values must not overlap or equal";
-    private static double gaussianMin = -1.0;
-    private static double gaussianMax = 1.0;
-    private static double standardDeviation = 1.0;
+    private static final double gaussianMin = -1.0;
+    private static final double gaussianMax = 1.0;
+    private static final double standardDeviation = 1.0;
 
     private RangeMapper rangeMapper;
     private int min;

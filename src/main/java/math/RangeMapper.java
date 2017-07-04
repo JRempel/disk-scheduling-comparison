@@ -3,7 +3,7 @@ package math;
 import exceptions.InvalidRangeMapperParameterException;
 
 public class RangeMapper {
-    private static String MIN_MAX_ERROR_MESSAGE = "min value must be < max value.";
+    private static final String MIN_MAX_ERROR_MESSAGE = "min value must be < max value.";
 
     private double minFrom;
     private double maxFrom;

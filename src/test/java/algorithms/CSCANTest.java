@@ -8,8 +8,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CSCANTest {
-    int maxCylinder = 199;
-    int minCylinder = 0;
+    final int maxCylinder = 199;
+    final int minCylinder = 0;
 
     @Test
     public void testCSCAN() {

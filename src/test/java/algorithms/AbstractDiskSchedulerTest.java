@@ -2,11 +2,8 @@ package algorithms;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 import exceptions.InvalidRequestException;
 
@@ -17,7 +14,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -26,8 +22,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 public class AbstractDiskSchedulerTest {
-    private int maxCylinder = 199;
-    private int minCylinder = 0;
+    private final int maxCylinder = 199;
+    private final int minCylinder = 0;
     private AbstractDiskScheduler scheduler;
 
     @Before

@@ -38,10 +38,8 @@ public class OSDA extends AbstractDiskScheduler {
                 direction = Direction.UP;
                 break;
             default:
-                /**
-                 * Current head position is equidistant to min and max request cylinders,
-                 * start seek from lower request arbitrarily.
-                 */
+                // Current head position is equidistant to min and max request cylinders,
+                // start seek from lower request arbitrarily.
                 currentHeadCylinder = requestQueue.get(0);
                 direction = Direction.UP;
         }
