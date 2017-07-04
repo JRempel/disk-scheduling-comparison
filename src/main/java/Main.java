@@ -2,6 +2,7 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import algorithms.CLOOK;
@@ -18,7 +19,6 @@ public class Main {
     private static int MIN_CYLINDER = 0;
     private static int MAX_CYLINDER = 511;
     private static int SEQUENCE_SIZE = 50;
-    private static int SEQUENCE_MULTIPLES = 1;
     private static int UNIFORM_R_SEED = 3;
     private static int MULTI_MODAL_SEED = 5;
     private static int MULTI_MODAL_PEAK_GEN_SEED = 7;
@@ -26,6 +26,7 @@ public class Main {
     private static int MULTI_MODAL_PEAK_AMOUNT = 8;
     private static int MIN_GROUP_SIZE = 2;
     private static int MAX_GROUP_SIZE = 5;
+    private static int[] SEQUENCE_MULTIPLES = {10};
 
     public static void main(String[] args) {
         RandomSequenceGenerator generator = new RandomSequenceGenerator(MIN_CYLINDER, MAX_CYLINDER);
@@ -45,35 +46,62 @@ public class Main {
                 MULTI_MODAL_SEED, true);
 
 
-        System.out.println("Pure Random:");
-        processGroupings(pureRandom, SEQUENCE_MULTIPLES, schedulers);
+        System.out.println("Pure Random, Equal Groupings:");
+        processEqualSizeGroupings(pureRandom, SEQUENCE_MULTIPLES, schedulers);
         clearSchedulers(schedulers);
 
-        System.out.println("MultiModal:");
-        processGroupings(multiModalRandom, SEQUENCE_MULTIPLES, schedulers);
+        System.out.println("MultiModal Random, Equal Groupings:");
+        processEqualSizeGroupings(multiModalRandom, SEQUENCE_MULTIPLES, schedulers);
         clearSchedulers(schedulers);
 
+        System.out.println("Pure Random, Random Groupings: ");
+        processRandomSizeGroupings(pureRandom, schedulers);
+
+        System.out.println("MultiModal, Random Groupings");
+        processRandomSizeGroupings(multiModalRandom, schedulers);
     }
 
-    private static void processGroupings(ArrayList<Integer> sequence, int multiplesOf, ArrayList<DiskScheduler> schedulers) {
-        IntStream.range(1, sequence.size() + 1).forEachOrdered( n -> {
-            System.out.println("Groupings of " + n + ":\n");
+    private static void processRandomSizeGroupings(ArrayList<Integer> sequence, ArrayList<DiskScheduler> schedulers) {
+        List<List<Integer>> sublists = new ArrayList<>();
+        Random groupSizeGenerator = new Random(UNIFORM_R_SEED);
+        int indexCompleted = 0;
 
-            if (n % multiplesOf == 0) {
-                for (DiskScheduler scheduler : schedulers) {
-
-                    List<List<Integer>> sublists = Lists.partition(sequence, n);
-                    for (List<Integer> list : sublists) {
-                        scheduler.setRequestQueue(list);
-                        scheduler.run();
-                    }
-
-                    scheduler.printResults();
+        while (indexCompleted < sequence.size()) {
+            int groupSize = groupSizeGenerator.nextInt(MAX_GROUP_SIZE - MIN_GROUP_SIZE + 1) + MIN_GROUP_SIZE;
+            List<Integer> subListToAdd = new ArrayList<>();
+            for (int currentIndex = indexCompleted; currentIndex < indexCompleted + groupSize; currentIndex++) {
+                if (currentIndex < sequence.size()) {
+                    subListToAdd.add(sequence.get(currentIndex));
                 }
-
-                clearSchedulers(schedulers);
             }
-        });
+
+            indexCompleted += groupSize;
+            sublists.add(subListToAdd);
+        }
+
+        processLists(sublists, schedulers);
+    }
+
+    private static void processEqualSizeGroupings(ArrayList<Integer> sequence, int[] multiplesOf, ArrayList<DiskScheduler> schedulers) {
+        for (int multiple : multiplesOf) {
+            System.out.println("Groupings of " + multiple + ":\n");
+            List<List<Integer>> sublists = Lists.partition(sequence, multiple);
+
+            processLists(sublists, schedulers);
+        }
+    }
+
+    private static void processLists(List<List<Integer>> sublists, ArrayList<DiskScheduler> schedulers) {
+        for (DiskScheduler scheduler : schedulers) {
+            for (List<Integer> list : sublists) {
+                scheduler.setRequestQueue(list);
+                scheduler.run();
+            }
+
+            scheduler.printResults();
+        }
+
+        clearSchedulers(schedulers);
     }
 
     private static void clearSchedulers(ArrayList<DiskScheduler> schedulers) {
