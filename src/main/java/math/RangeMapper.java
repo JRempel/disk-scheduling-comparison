@@ -1,6 +1,10 @@
 package math;
 
+import exceptions.InvalidRangeMapperParameterException;
+
 public class RangeMapper {
+    private static String MIN_MAX_ERROR_MESSAGE = "min value must be < max value.";
+
     private double minFrom;
     private double maxFrom;
     private int minTo;
@@ -13,6 +17,12 @@ public class RangeMapper {
      * @param maxTo - max value of range to map to.
      */
     public RangeMapper(double minFrom, double maxFrom, int minTo, int maxTo) {
+        if (minFrom >= maxFrom) {
+            throw new InvalidRangeMapperParameterException("min &| max (from)", MIN_MAX_ERROR_MESSAGE);
+        } else if (minTo >= maxTo) {
+            throw new InvalidRangeMapperParameterException("min &| max (to)", MIN_MAX_ERROR_MESSAGE);
+        }
+
         this.minFrom = minFrom;
         this.maxFrom = maxFrom;
         this.minTo = minTo;
