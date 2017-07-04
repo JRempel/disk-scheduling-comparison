@@ -1,6 +1,7 @@
 package math;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -36,13 +37,26 @@ public class RandomSequenceGenerator {
      * @param numDataPoints - the number of data points to randomly generate.
      * @return
      */
-    public ArrayList<Integer> getUniformRandomSequence(int numDataPoints, int seed) {
+    public ArrayList<Integer> getUniformRandomSequence(int numDataPoints, int seed, boolean dedupeList) {
         if (numDataPoints < 0) {
             throw new InvalidGeneratorParameterException("numDataPoints", getClass(), DATA_POINTS_ERROR);
         }
         Random generator = new Random(seed);
         ArrayList<Integer> sequence = new ArrayList<>();
-        IntStream.range(0, numDataPoints).forEach($ -> sequence.add(generator.nextInt(max - min + 1) + min));
+
+        do {
+            for (int i = 0; i < numDataPoints; i++) {
+                sequence.add(generator.nextInt(max - min + 1) + min);
+            }
+            if (dedupeList) {
+                sequence = dedupe(sequence);
+            }
+        } while(dedupeList && sequence.size() < numDataPoints);
+
+        if (dedupeList && sequence.size() > numDataPoints) {
+            sequence = new ArrayList<>(sequence.subList(0, numDataPoints));
+        }
+
         return sequence;
     }
 
@@ -61,7 +75,9 @@ public class RandomSequenceGenerator {
      * @param distributionSeed - the seed value for the Gaussian distribution math.
      * @return
      */
-    public ArrayList<Integer> getMultimodalRandomSequence(int numDataPoints, int numPeaks, int peakGeneratorSeed, int peakSelectorSeed, int distributionSeed) {
+    public ArrayList<Integer> getMultimodalRandomSequence(int numDataPoints, int numPeaks,
+                                                          int peakGeneratorSeed, int peakSelectorSeed,
+                                                          int distributionSeed, boolean dedupeList) {
         if (numDataPoints < 0) {
             throw new InvalidGeneratorParameterException("numDataPoints", getClass(), DATA_POINTS_ERROR);
         }
@@ -82,18 +98,36 @@ public class RandomSequenceGenerator {
             peaks.add(peak);
         }
 
-        for (int i = 0; i < numDataPoints; i++) {
-            // Use the selected peak as the mean of the distribution
-            double selectedPeak = peaks.get(peakSelector.nextInt(peaks.size()));
-            double randomPoint = gaussianGenerator.nextGaussian() * standardDeviation + selectedPeak;
+        do {
+            for (int i = 0; i < numDataPoints; i++) {
+                // Use the selected peak as the mean of the distribution
+                double selectedPeak = peaks.get(peakSelector.nextInt(peaks.size()));
+                double randomPoint = gaussianGenerator.nextGaussian() * standardDeviation + selectedPeak;
 
-            // cut off at -1, 1
-            randomPoint = (randomPoint < -1) ? -1 : (randomPoint > 1) ? 1 : randomPoint;
+                // cut off at -1, 1
+                randomPoint = (randomPoint < -1) ? -1 : (randomPoint > 1) ? 1 : randomPoint;
 
-            // Map the random point to the specified int range & add to seqence
-            sequence.add(rangeMapper.mapDoubleToInt(randomPoint));
+                // Map the random point to the specified int range & add to sequence
+                sequence.add(rangeMapper.mapDoubleToInt(randomPoint));
+            }
+            if (dedupeList) {
+                sequence = dedupe(sequence);
+            }
+        } while(dedupeList && sequence.size() < numDataPoints);
+
+        if (dedupeList && sequence.size() > numDataPoints) {
+            sequence = new ArrayList<>(sequence.subList(0, numDataPoints));
         }
 
         return sequence;
+    }
+
+    /**
+     * Dedupe a list while maintaining ordering.
+     * @param input - list to dedupe.
+     * @return deduped input list with the same ordering.
+     */
+    private static ArrayList<Integer> dedupe(ArrayList<Integer> input) {
+        return new ArrayList<>(new LinkedHashSet<>(input));
     }
 }

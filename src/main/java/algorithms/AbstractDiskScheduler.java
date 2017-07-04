@@ -2,6 +2,7 @@ package algorithms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import exceptions.InvalidRequestException;
@@ -25,8 +26,6 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     }
 
     public void run() {
-
-        System.out.println(requestQueue.size());
         Integer next;
         // Run setup of algorithm if implemented.
         preRun();
@@ -54,7 +53,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     protected abstract void preRun();
     protected abstract Integer selectNext();
 
-    public boolean setRequestQueue(ArrayList<Integer> queue){
+    public boolean setRequestQueue(List<Integer> queue){
         if (isValidRequestQueue(queue)) {
             this.requestQueue = new ArrayList<>(queue);
             return true;
@@ -88,7 +87,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
         pauseConditions = new ArrayList<>();
     }
 
-    private boolean isValidRequestQueue(ArrayList<Integer> queue) {
+    private boolean isValidRequestQueue(List<Integer> queue) {
         return queue != null &&
                 queue.stream().allMatch(request -> request >= MIN_DISK_CYLINDER &&request <= MAX_DISK_CYLINDER) &&
                 queue.stream().distinct().count() == queue.size();
@@ -117,7 +116,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     Integer getNextRequestUp() {
         return requestQueue
                 .stream()
-                .filter(request -> request - currentHeadCylinder > 0)
+                .filter(request -> request - currentHeadCylinder >= 0)
                 .reduce((request1, request2) -> request1 - currentHeadCylinder < request2 - currentHeadCylinder ? request1 : request2)
                 .orElse(null);
     }
@@ -125,7 +124,7 @@ public abstract class AbstractDiskScheduler implements DiskScheduler {
     Integer getNextRequestDown() {
         return requestQueue
                 .stream()
-                .filter(request -> currentHeadCylinder - request > 0)
+                .filter(request -> currentHeadCylinder - request >= 0)
                 .reduce((request1, request2) -> currentHeadCylinder - request1 < currentHeadCylinder - request2 ? request1 : request2)
                 .orElse(null);
     }

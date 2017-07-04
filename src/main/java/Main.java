@@ -1,8 +1,7 @@
-import java.lang.reflect.Array;
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import algorithms.CLOOK;
 import algorithms.CSCAN;
@@ -23,8 +22,8 @@ public class Main {
     private static int MULTI_MODAL_PEAK_GEN_SEED = 7;
     private static int MULTI_MODAL_PEAK_SELECTOR_SEED = 13;
     private static int MULTI_MODAL_PEAK_AMOUNT = 8;
-    private static int MIN_GROUP_SIZE = 3;
-    private static int MAX_GROUP_SIZE = 10;
+    private static int MIN_GROUP_SIZE = 2;
+    private static int MAX_GROUP_SIZE = 5;
 
     public static void main(String[] args) {
         RandomSequenceGenerator generator = new RandomSequenceGenerator(MIN_CYLINDER, MAX_CYLINDER);
@@ -38,21 +37,43 @@ public class Main {
             add(new OSDA(MIN_CYLINDER, MAX_CYLINDER));
         }};
 
-        ArrayList<Integer> pureRandom = generator.getUniformRandomSequence(SEQUENCE_SIZE, UNIFORM_R_SEED);
+        ArrayList<Integer> pureRandom = generator.getUniformRandomSequence(SEQUENCE_SIZE, UNIFORM_R_SEED, true);
         ArrayList<Integer> multiModalRandom = generator.getMultimodalRandomSequence(SEQUENCE_SIZE,
                 MULTI_MODAL_PEAK_AMOUNT, MULTI_MODAL_PEAK_GEN_SEED, MULTI_MODAL_PEAK_SELECTOR_SEED,
-                MULTI_MODAL_SEED);
+                MULTI_MODAL_SEED, true);
 
+        int[] multiples = new int[]{5, 10, 25, 50};
 
-        for (DiskScheduler scheduler: schedulers) {
-            scheduler.setRequestQueue(dedupe(new ArrayList<>(pureRandom)));
-            scheduler.run();
-            scheduler.printResults();
+        System.out.println("Pure Random:");
+        processMultiples(pureRandom, schedulers, multiples);
+        clearSchedulers(schedulers);
+
+        System.out.println("MultiModal:");
+        processMultiples(multiModalRandom, schedulers, multiples);
+        clearSchedulers(schedulers);
+
+    }
+
+    private static void processMultiples(ArrayList<Integer> sequence, ArrayList<DiskScheduler> schedulers, int[] multiples) {
+        for (int multiple: multiples) {
+            System.out.println("Multiples of " + multiple + ":\n");
+
+            for (DiskScheduler scheduler : schedulers) {
+
+                List<List<Integer>> sublists = Lists.partition(sequence, multiple);
+                for (List<Integer> list: sublists) {
+                    scheduler.setRequestQueue(list);
+                    scheduler.run();
+                }
+
+                scheduler.printResults();
+            }
         }
     }
 
-    // Algorithms expect no duplicates
-    private static ArrayList<Integer> dedupe(ArrayList<Integer> input) {
-        return new ArrayList<>(new LinkedHashSet<>(input));
+    private static void clearSchedulers(ArrayList<DiskScheduler> schedulers) {
+        for (DiskScheduler scheduler: schedulers) {
+            scheduler.reset();
+        }
     }
 }
